@@ -4,30 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function issueToken(Request $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $user = User::create([
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
+        return $user->createToken('api-token')->plainTextToken;
+    }
+
+
+    public function revokeToken(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response([
+            'message' => 'Tokens revoked'
         ]);
+    }
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+    public function refreshToken(Request $request)
+    {
+        $request->user()->tokens()->delete();
 
-        $response = [
-            'user' => $user,
-            'token' => $token,
-        ];
-
-        return response($response, 201);
+        return $request->user()->createToken('api-token')->plainTextToken;
     }
 }
