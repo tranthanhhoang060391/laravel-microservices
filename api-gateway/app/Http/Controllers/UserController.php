@@ -56,7 +56,6 @@ class UserController extends Controller
 
         $user = $request->user();
         $user->name = $fields['name'];
-        $user->email = $fields['email'];
         $user->save();
 
         return response($user, 200);
