@@ -2,13 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\TokenController;
+use App\Http\Controllers\AuthController;
 
+// Public routes
 Route::post('/user/register', [UserController::class, 'register']);
-Route::put('/user/update', [UserController::class, 'update'])->middleware('auth:sanctum');
-Route::get('/user/profile', [UserController::class, 'profile'])->middleware('auth:sanctum');
+Route::post('/auth/login', [AuthController::class, 'login']);
 
-Route::post('/token/create', [TokenController::class, 'create']);
-Route::delete('/token/delete', [TokenController::class, 'revoke'])->middleware('auth:sanctum');
-Route::put('/token/refresh', [TokenController::class, 'refresh'])->middleware('auth:sanctum');
+// Protected routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/auth/token-revoke', [AuthController::class, 'tokenRevoke']);
+    Route::put('/auth/token-refresh', [AuthController::class, 'tokenRefresh']);
 
+    Route::put('/user/update', [UserController::class, 'update']);
+    Route::get('/user/profile', [UserController::class, 'profile']);
+});

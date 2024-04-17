@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
-class TokenController extends Controller
+class AuthController extends Controller
 {
-    public function create(Request $request)
+    public function login(Request $request)
     {
-        $request->validate([
+        $validate = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required'
         ]);
+
+        if ($validate->fails()) {
+            return response([
+                'message' => 'Validation error',
+                'errors' => $validate->errors()
+            ], 403);
+        }
 
         $user = User::where('email', $request->email)->first();
 
@@ -22,10 +30,16 @@ class TokenController extends Controller
                 'message' => 'Invalid credentials'
             ], 401);
         }
-        return response([
-            'token' => $this->generateToken($user),
-            'type' => 'Bearer',
-            'expires_at' => now()->addWeek()->toDateTimeString()
+
+        return response()->json([
+            'user' => $user,
+            'status' => 'success',
+            'message' => 'Login successfull',
+            'data' => [
+                'token' => $this->generateToken($user),
+                'type' => 'Bearer',
+                'expires_at' => now()->addWeek()->toDateTimeString(),
+            ]
         ]);
     }
 
@@ -38,7 +52,7 @@ class TokenController extends Controller
         )->plainTextToken;
     }
 
-    public function revoke(Request $request)
+    public function tokenRevoke(Request $request)
     {
         $request->user()->tokens()->delete();
 
@@ -47,7 +61,7 @@ class TokenController extends Controller
         ]);
     }
 
-    public function refresh(Request $request)
+    public function tokenRefresh(Request $request)
     {
         $request->user()->tokens()->delete();
 
