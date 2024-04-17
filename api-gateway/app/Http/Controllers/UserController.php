@@ -43,19 +43,9 @@ class UserController extends Controller
 
     public function profile(Request $request)
     {
-        $fields = $request->validate([
-            'email' => 'required|string|email|max:255',
+        return response()->json([
+            'user' => $request->user()
         ]);
-
-        $user = User::where('email', $fields['email'])->first();
-
-        if (!$user) {
-            return response([
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        return response($user, 200);
     }
 
     public function update(Request $request)
