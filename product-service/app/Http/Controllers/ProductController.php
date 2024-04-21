@@ -30,8 +30,66 @@ class ProductController extends Controller
 
         $response = Product::create($fields);
 
-        return response()->json($response, 201);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product created successfully',
+            'data' => $response
+        ], 201);
     }
 
+    public function show($id)
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product details',
+            'data' => Product::find($id)
+        ]);
+    }
 
+    public function update(Request $request, $id)
+    {
+        $fields = $request->validate([
+            'name' => 'string|max:255',
+            'description' => 'string',
+            'price' => 'numeric',
+            'stock' => 'integer',
+            'status' => 'string|in:available,unavailable,discontinued',
+        ]);
+
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->update($fields);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product updated successfully',
+            'data' => $product
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product deleted successfully'
+        ]);
+    }
 }
