@@ -26,7 +26,6 @@ class OrderController extends Controller
             'details' => 'required|array',
             'details.*.product_id' => 'required|integer',
             'details.*.quantity' => 'required|integer',
-            'details.*.price' => 'required|numeric',
         ]);
 
         $order = Order::create([
@@ -48,7 +47,6 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'product_id' => $detail['product_id'],
                 'quantity' => $detail['quantity'],
-                'price' => $detail['price'],
             ]);
         }
 
@@ -77,7 +75,6 @@ class OrderController extends Controller
             'details.*.id' => 'required|integer',
             'details.*.product_id' => 'required|integer',
             'details.*.quantity' => 'required|integer',
-            'details.*.price' => 'required|numeric',
         ]);
 
         $order = Order::find($id);
