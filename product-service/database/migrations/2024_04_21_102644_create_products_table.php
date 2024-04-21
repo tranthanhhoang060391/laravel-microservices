@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('status');
             $table->string('photo');
             $table->softDeletes();
-            $table->timestamp('published_at')->nullable();
-            $table->timestamp('archived_at')->nullable();
-            $table->timestamp('deleted_at')->nullable();
             $table->index('status');
             $table->timestamps();
         });
