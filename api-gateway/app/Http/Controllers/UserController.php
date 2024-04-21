@@ -17,6 +17,7 @@ class UserController extends Controller
 
         if (User::where('email', $fields['email'])->exists()) {
             return response([
+                'status' => 'error',
                 'message' => 'User already exists'
             ], 409);
         }
@@ -34,8 +35,12 @@ class UserController extends Controller
         )->plainTextToken;
 
         $response = [
-            'user' => $user,
-            'token' => $token,
+            'status' => 'success',
+            'message' => 'User created successfully',
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+            ]
         ];
 
         return response($response, 201);
@@ -43,9 +48,13 @@ class UserController extends Controller
 
     public function profile(Request $request)
     {
-        return response()->json([
-            'user' => $request->user()
-        ]);
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'User profile',
+                'data' => $request->user()
+            ]
+        );
     }
 
     public function update(Request $request)
@@ -58,6 +67,12 @@ class UserController extends Controller
         $user->name = $fields['name'];
         $user->save();
 
-        return response($user, 200);
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'User updated successfully',
+                'data' => $user
+            ]
+        );
     }
 }
