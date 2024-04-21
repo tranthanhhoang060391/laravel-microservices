@@ -12,7 +12,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product list',
+            'data' => Product::all()
+        ]);
     }
 
     /**
@@ -74,7 +78,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $product = Product::find($id);
 
