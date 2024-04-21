@@ -30,7 +30,6 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'status' => 'required|string|in:available,unavailable,discontinued',
-            'image' => 'optional|image'
         ]);
 
         $product = Product::create($fields);
