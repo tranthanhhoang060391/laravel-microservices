@@ -32,12 +32,20 @@ class ProductController extends Controller
             'status' => 'required|string|in:available,unavailable,discontinued',
         ]);
 
-        $response = Product::create($fields);
+        $data = Product::create($fields);
+        va_dump($data);exit;
+
+        if (!$data) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to create product'
+            ], 500);
+        }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Product created successfully',
-            'data' => $response
+            'data' => $data
         ], 201);
     }
 
