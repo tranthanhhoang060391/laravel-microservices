@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('stock');
             $table->string('status');
-            $table->string('photo');
             $table->softDeletes();
             $table->index('status');
             $table->timestamps();
