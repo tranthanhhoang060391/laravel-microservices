@@ -134,10 +134,14 @@ class OrderController extends Controller
 
     public function userOrders(Request $request)
     {
+        $fields = $request->validate([
+            'user_id' => 'required|integer'
+        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'User orders',
-            'data' => Order::where('user_id', $request->user()->id)->with('details')->get()
+            'data' => Order::where('user_id', $fields['user_id'])->with('details')->get()
         ]);
     }
 }
