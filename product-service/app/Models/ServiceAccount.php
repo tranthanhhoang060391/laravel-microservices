@@ -10,5 +10,5 @@ class ServiceAccount extends Model
 {
     use HasApiTokens, HasFactory;
 
-    protected $fillable = ['name', 'service_id', 'service_secret'];
+    protected $fillable = ['name', 'api_token', 'api_token_expires_at'];
 }

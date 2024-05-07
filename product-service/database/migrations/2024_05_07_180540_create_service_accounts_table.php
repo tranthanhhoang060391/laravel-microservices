@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('service_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('service_id');
-            $table->string('service_secret');
+            // $table->string('service_id');
+            // $table->string('service_secret');
+            $table->string('api_token')->nullable();
+            $table->timestamp('api_token_expires_at')->nullable();
             $table->timestamps();
         });
     }
