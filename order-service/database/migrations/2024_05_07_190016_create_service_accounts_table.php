@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('api_tokens', function (Blueprint $table) {
+        Schema::create('service_accounts', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('service_id');
+            $table->string('service_secret');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('api_tokens');
+        Schema::dropIfExists('service_accounts');
     }
 };
