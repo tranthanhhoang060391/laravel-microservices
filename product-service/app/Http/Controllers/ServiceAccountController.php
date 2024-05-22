@@ -42,6 +42,9 @@ class ServiceAccountController extends Controller
 
     private function generateToken($serviceAccount)
     {
+        $serviceAccount->tokens()->delete();
+        InterServiceTokens::where('issuer_service_id', env('PRODUCT_SERVICE_ID'))->where('receiver_service_id', $serviceAccount->service_id)->delete();
+
         $expiresAt = now()->addWeek();
         $token = $serviceAccount->createToken(
             'api-token',
@@ -50,8 +53,8 @@ class ServiceAccountController extends Controller
         )->plainTextToken;
 
         InterServiceTokens::create([
-            'issuer_service_id' => $serviceAccount->service_id,
-            'receiver_service_id' => env('PRODUCT_SERVICE_ID'),
+            'issuer_service_id' => env('PRODUCT_SERVICE_ID'),
+            'receiver_service_id' => $serviceAccount->service_id,
             'token' => $token,
             'api_token_expires_at' => $expiresAt
         ]);
