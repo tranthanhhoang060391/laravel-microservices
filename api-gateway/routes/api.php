@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductServiceController;
 
 // Public routes
 Route::post('/user/register', [UserController::class, 'register']);
@@ -15,4 +16,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/user/update', [UserController::class, 'update']);
     Route::get('/user/profile', [UserController::class, 'profile']);
+
+    Route::get('/products', [ProductServiceController::class, 'getProducts']);
 });
