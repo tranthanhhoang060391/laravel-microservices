@@ -19,6 +19,12 @@ class ServiceAccountSeeder extends Seeder
         ]);
 
         DB::table('service_accounts')->insert([
+            'name' => 'Product Service',
+            'service_id' => '$2y$12$OseyIhjak7WApGLFWJ1gTu7ED8vdklxnJul4c3htro8GcpFizQUPe',
+            'service_secret' => '$2y$12$W5sOtOoOIoVf6wIFKw.Mo.KOMiDXJjJquOPbl15/2oGroMyESnpbO',
+        ]);
+
+        DB::table('service_accounts')->insert([
             'name' => 'Order Service',
             'service_id' => '$2y$12$Loiol.9NL6IL8M.c53q3HOLvrDjvqxkzSSIYnYhGhy.lJmnBx9Caq',
             'service_secret' => '$2y$12$1RBc/n2dk2KkIWxRYsBKJefjLD5zdvSqpFX9Z0snY0aaOi1/E8.kO',
