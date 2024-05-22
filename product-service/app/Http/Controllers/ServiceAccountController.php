@@ -12,6 +12,43 @@ class ServiceAccountController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'service_id' => 'required',
+            'service_secret' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return response([
+                'message' => 'Validation error',
+                'errors' => $validate->errors()
+            ], 403);
+        }
+
+        $serviceAccount = ServiceAccount::where('service_id', $request->service_id)
+            ->where('service_secret', $request->service_secret)
+            ->first();
+
+        if (!$serviceAccount) {
+            return response([
+                'message' => 'Invalid service id or secret'
+            ], 403);
+        }
+
+        $token = $serviceAccount->createToken('product-service')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Token issued successfully',
+            'data' => [
+                'token' => $token,
+                'type' => 'Bearer',
+                'expires_at' => now()->addWeek()->toDateTimeString(),
+            ]
+        ]);
+    }
+
+    public function refreshToken(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'service_id' => 'required',
             'secret' => 'required'
         ]);
 
@@ -32,11 +69,13 @@ class ServiceAccountController extends Controller
             ], 403);
         }
 
+        $serviceAccount->tokens()->delete();
+
         $token = $serviceAccount->createToken('product-service')->plainTextToken;
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Token issued successfully',
+            'message' => 'Token refreshed successfully',
             'data' => [
                 'token' => $token,
                 'type' => 'Bearer',
