@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ServiceAccount;
+use App\Models\InterServiceTokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,7 +13,7 @@ class ServiceAccountController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'service_id' => 'required',
-            'secret' => 'required'
+            'service_secret' => 'required'
         ]);
 
         if ($validate->fails()) {
@@ -23,7 +24,7 @@ class ServiceAccountController extends Controller
         }
 
         $serviceAccount = ServiceAccount::where('service_id', $request->service_id)
-            ->where('secret', $request->secret)
+            ->where('service_secret', $request->service_secret)
             ->first();
 
         if (!$serviceAccount) {
@@ -32,16 +33,36 @@ class ServiceAccountController extends Controller
             ], 403);
         }
 
-        $token = $serviceAccount->createToken('product-service')->plainTextToken;
-
         return response()->json([
             'status' => 'success',
             'message' => 'Token issued successfully',
-            'data' => [
-                'token' => $token,
-                'type' => 'Bearer',
-                'expires_at' => now()->addWeek()->toDateTimeString(),
-            ]
+            'data' => $this->generateToken($serviceAccount)
         ]);
+    }
+
+    private function generateToken($serviceAccount)
+    {
+        $serviceAccount->tokens()->delete();
+        InterServiceTokens::where('receiver_service_id', $serviceAccount->service_id)->delete();
+
+        $expiresAt = now()->addWeek();
+        $token = $serviceAccount->createToken(
+            'api-token',
+            ['*'],
+            $expiresAt
+        )->plainTextToken;
+
+        InterServiceTokens::updateOrCreate([
+            // 'issuer_service_id' => env('PRODUCT_SERVICE_ID'),
+            'receiver_service_id' => $serviceAccount->service_id,
+            'token' => $token,
+            'api_token_expires_at' => $expiresAt
+        ]);
+
+        return [
+            'token' => $token,
+            'expires_at' => $expiresAt,
+            'type' => 'Bearer'
+        ];
     }
 }

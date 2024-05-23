@@ -65,37 +65,4 @@ class ServiceAccountController extends Controller
             'type' => 'Bearer'
         ];
     }
-
-    public function refreshToken(Request $request)
-    {
-        $validate = Validator::make($request->all(), [
-            'service_id' => 'required',
-            'secret' => 'required'
-        ]);
-
-        if ($validate->fails()) {
-            return response([
-                'message' => 'Validation error',
-                'errors' => $validate->errors()
-            ], 403);
-        }
-
-        $serviceAccount = ServiceAccount::where('service_id', $request->service_id)
-            ->where('service_secret', $request->service_secret)
-            ->first();
-
-        if (!$serviceAccount) {
-            return response([
-                'message' => 'Invalid service id or secret'
-            ], 403);
-        }
-
-        $serviceAccount->tokens()->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Token refreshed successfully',
-            'data' => $this->generateToken($serviceAccount)
-        ]);
-    }
 }

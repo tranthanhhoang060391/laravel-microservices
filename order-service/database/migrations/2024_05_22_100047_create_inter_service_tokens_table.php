@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('inter_service_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('issuer_service_id');
+            $table->string('receiver_service_id');
             $table->string('token');
             $table->timestamp('api_token_expires_at')->nullable();
             $table->timestamps();

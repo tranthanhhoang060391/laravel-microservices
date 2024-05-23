@@ -14,14 +14,20 @@ class ServiceAccountSeeder extends Seeder
     {
         DB::table('service_accounts')->insert([
             'name' => 'API Gateway',
-            'service_id' => '$2y$12$1WIEUQQ8zyZb4wdoyt2deeD2QqbOxfjia5GFYwoPocciZfIsWTn4.',
-            'service_secret' => '$2y$12$4zEqYdQpkokg.kk0ovAhVe7KQcBMTVrcYgLrDl9ouqDOl80R4M0om',
+            'service_id' => env('API_GATEWAY_SERVICE_ID'),
+            'service_secret' => env('API_GATEWAY_SERVICE_SECRET'),
         ]);
 
         DB::table('service_accounts')->insert([
             'name' => 'Product Service',
-            'service_id' => '$2y$12$OseyIhjak7WApGLFWJ1gTu7ED8vdklxnJul4c3htro8GcpFizQUPe',
-            'service_secret' => '$2y$12$W5sOtOoOIoVf6wIFKw.Mo.KOMiDXJjJquOPbl15/2oGroMyESnpbO',
+            'service_id' => env('PRODUCT_SERVICE_ID'),
+            'service_secret' => env('PRODUCT_SERVICE_SECRET'),
+        ]);
+
+        DB::table('service_accounts')->insert([
+            'name' => 'Order Service',
+            'service_id' => env('ORDER_SERVICE_ID'),
+            'service_secret' => env('ORDER_SERVICE_SECRET'),
         ]);
     }
 }

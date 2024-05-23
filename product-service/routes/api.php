@@ -13,4 +13,3 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('service-accounts/token', [ServiceAccountController::class, 'issueToken']);
-Route::post('service-accounts/refresh-token', [ServiceAccountController::class, 'tokenRefresh']);
