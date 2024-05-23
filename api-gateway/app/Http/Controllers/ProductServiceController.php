@@ -13,6 +13,14 @@ class ProductServiceController extends Controller
     public function getProducts(Request $request)
     {
         try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens'
+                ], 500);
+            }
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->getTokens()->token,
             ])->get(env('PRODUCT_SERVICE_URL') . '/products');
@@ -26,16 +34,20 @@ class ProductServiceController extends Controller
     private function getTokens()
     {
         $tokens = Cache::get('inter_service_tokens');
-        if (!$tokens) {
+        if (empty($tokens)) {
             $tokens = InterServiceTokens::where('issuer_service_id', env('PRODUCT_SERVICE_ID'))->get();
 
             if ($tokens->isEmpty() || $tokens->first()->api_token_expires_at < now()) {
-                $response = Http::post(env('PRODUCT_SERVICE_URL')  . '/service-accounts/token', [
+                $request = Http::post(env('PRODUCT_SERVICE_URL')  . '/service-accounts/token', [
                     'service_id' => env('PRODUCT_SERVICE_ID'),
                     'service_secret' => env('PRODUCT_SERVICE_SECRET'),
                 ]);
 
-                $response = $response->json();
+                $response = $request->json();
+
+                if (!isset($response['data']['token'])) {
+                    return [];
+                }
 
                 $tokens = InterServiceTokens::updateOrCreate(
                     ['issuer_service_id' => env('PRODUCT_SERVICE_ID')],
@@ -46,7 +58,8 @@ class ProductServiceController extends Controller
                     ]
                 );
 
-                Cache::put('inter_service_tokens', $tokens, $response['data']['expires_at']);
+                // Cache the tokens with the time left before it expires
+                Cache::put('inter_service_tokens', $tokens, now()->diffInSeconds($response['data']['expires_at']));
             }
         }
 

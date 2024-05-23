@@ -9,7 +9,7 @@ class InterServiceTokens extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['issuer_service_id', 'receiver_service_id', 'token', 'api_token_expires_at'];
+    protected $fillable = ['receiver_service_id', 'token', 'api_token_expires_at'];
 
     protected $casts = [
         'api_token_expires_at' => 'datetime',
