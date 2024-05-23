@@ -31,6 +31,90 @@ class ProductServiceController extends Controller
         }
     }
 
+    public function createProduct(Request $request)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens'
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getTokens()->token,
+            ])->post(env('PRODUCT_SERVICE_URL') . '/product/create', $request->all());
+
+            return response()->json($response->json());
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getProduct($id)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens'
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getTokens()->token,
+            ])->get(env('PRODUCT_SERVICE_URL') . '/product/' . $id);
+
+            return response()->json($response->json());
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens'
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getTokens()->token,
+            ])->put(env('PRODUCT_SERVICE_URL') . '/product/update/' . $id, $request->all());
+
+            return response()->json($response->json());
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteProduct($id)
+    {
+        try {
+            $tokens = $this->getTokens();
+            if (!$tokens) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to get tokens'
+                ], 500);
+            }
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getTokens()->token,
+            ])->delete(env('PRODUCT_SERVICE_URL') . '/product/delete/' . $id);
+
+            return response()->json($response->json());
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            return response()->json(['error' => 'Failed to connect', 'exception' => $e->getMessage()], 500);
+        }
+    }
+
     private function getTokens()
     {
         $tokens = Cache::get('inter_service_tokens');
