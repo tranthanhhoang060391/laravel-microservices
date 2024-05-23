@@ -11,6 +11,10 @@ class InterServiceTokens extends Model
 
     protected $fillable = ['issuer_service_id', 'token', 'api_token_expires_at'];
 
+    protected $casts = [
+        'api_token_expires_at' => 'datetime',
+    ];
+
     public function issuerServiceAccount()
     {
         return $this->belongsTo(ServiceAccount::class, 'issuer_service_id', 'service_id');

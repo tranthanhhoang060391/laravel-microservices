@@ -42,7 +42,7 @@ class ProductServiceController extends Controller
                     [
                         'token' => $response['data']['token'],
                         // convert the expires_in to a timestamp to store in the database
-                        'api_token_expires_at' => now()->addSeconds($response['data']['expires_in']),
+                        'api_token_expires_at' => $response['data']['expires_at']
                     ]
                 );
 

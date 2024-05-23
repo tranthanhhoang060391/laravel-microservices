@@ -11,11 +11,9 @@ class InterServiceTokens extends Model
 
     protected $fillable = ['issuer_service_id', 'receiver_service_id', 'token', 'api_token_expires_at'];
 
-    // Foreign key relationship with ServiceAccount
-    public function serviceAccount()
-    {
-        return $this->belongsTo(ServiceAccount::class, 'issuer_service_id', 'service_id');
-    }
+    protected $casts = [
+        'api_token_expires_at' => 'datetime',
+    ];
 
     // Foreign key relationship with ServiceAccount
     public function receiverServiceAccount()
