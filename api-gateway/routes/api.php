@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\OrderServiceController;
 
 // Public routes
 Route::post('/user/register', [UserController::class, 'register']);
@@ -24,4 +25,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/product/update/{id}', [ProductServiceController::class, 'updateProduct']);
     Route::delete('/product/delete/{id}', [ProductServiceController::class, 'deleteProduct']);
 
+    // Order service routes
+    Route::get('/orders', [OrderServiceController::class, 'getOrders']);
+    Route::post('/order/create', [OrderServiceController::class, 'createOrder']);
+    Route::get('/order/{id}', [OrderServiceController::class, 'getOrder']);
+    Route::put('/order/update/{id}', [OrderServiceController::class, 'updateOrder']);
+    Route::delete('/order/delete/{id}', [OrderServiceController::class, 'deleteOrder']);
+    Route::get('/order/user/{user_id}', [OrderServiceController::class, 'getUserOrders']);
 });
