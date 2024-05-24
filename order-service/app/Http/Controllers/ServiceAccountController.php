@@ -53,7 +53,6 @@ class ServiceAccountController extends Controller
         )->plainTextToken;
 
         InterServiceTokens::updateOrCreate([
-            // 'issuer_service_id' => env('PRODUCT_SERVICE_ID'),
             'receiver_service_id' => $serviceAccount->service_id,
             'token' => $token,
             'api_token_expires_at' => $expiresAt

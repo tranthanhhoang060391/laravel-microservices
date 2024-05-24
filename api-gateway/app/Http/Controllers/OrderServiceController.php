@@ -137,14 +137,15 @@ class OrderServiceController extends Controller
 
     private function getTokens()
     {
-        $tokens = Cache::get('inter_service_token_product');
-        if (empty($tokens)) {
-            $tokens = InterServiceTokens::where('issuer_service_id', env('PRODUCT_SERVICE_ID'))->get();
+        $tokens = Cache::get('inter_service_token_order');
 
-            if ($tokens->isEmpty() || $tokens->first()->api_token_expires_at < now()) {
+        if (empty($tokens)) {
+            $tokens = InterServiceTokens::where('issuer_service_id', env('ORDER_SERVICE_ID'))->get();
+
+            if ($tokens->isEmpty() || $tokens->api_token_expires_at < now()) {
                 $request = Http::post(env('ORDER_SERVICE_URL')  . '/service-accounts/token', [
-                    'service_id' => env('PRODUCT_SERVICE_ID'),
-                    'service_secret' => env('PRODUCT_SERVICE_SECRET'),
+                    'service_id' => env('API_GATEWAY_SERVICE_ID'),
+                    'service_secret' => env('API_GATEWAY_SERVICE_SECRET'),
                 ]);
 
                 $response = $request->json();
@@ -154,7 +155,7 @@ class OrderServiceController extends Controller
                 }
 
                 $tokens = InterServiceTokens::updateOrCreate(
-                    ['issuer_service_id' => env('PRODUCT_SERVICE_ID')],
+                    ['issuer_service_id' => env('ORDER_SERVICE_ID')],
                     [
                         'token' => $response['data']['token'],
                         // convert the expires_in to a timestamp to store in the database
@@ -163,10 +164,10 @@ class OrderServiceController extends Controller
                 );
 
                 // Cache the tokens with the time left before it expires
-                Cache::put('inter_service_token_product', $tokens, now()->diffInSeconds($response['data']['expires_at']));
+                Cache::put('inter_service_token_order', $tokens, now()->diffInSeconds($response['data']['expires_at']));
             }
         }
 
-        return $tokens->first();
+        return $tokens;
     }
 }

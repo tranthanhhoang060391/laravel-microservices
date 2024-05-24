@@ -14,6 +14,7 @@ class ProductServiceController extends Controller
     {
         try {
             $tokens = $this->getTokens();
+
             if (!$tokens) {
                 return response()->json([
                     'status' => 'error',
@@ -121,10 +122,10 @@ class ProductServiceController extends Controller
         if (empty($tokens)) {
             $tokens = InterServiceTokens::where('issuer_service_id', env('PRODUCT_SERVICE_ID'))->get();
 
-            if ($tokens->isEmpty() || $tokens->first()->api_token_expires_at < now()) {
+            if ($tokens->isEmpty() || $tokens->api_token_expires_at < now()) {
                 $request = Http::post(env('PRODUCT_SERVICE_URL')  . '/service-accounts/token', [
-                    'service_id' => env('PRODUCT_SERVICE_ID'),
-                    'service_secret' => env('PRODUCT_SERVICE_SECRET'),
+                    'service_id' => env('API_GATEWAY_SERVICE_ID'),
+                    'service_secret' => env('API_GATEWAY_SERVICE_SECRET'),
                 ]);
 
                 $response = $request->json();
@@ -147,6 +148,6 @@ class ProductServiceController extends Controller
             }
         }
 
-        return $tokens->first();
+        return $tokens;
     }
 }
