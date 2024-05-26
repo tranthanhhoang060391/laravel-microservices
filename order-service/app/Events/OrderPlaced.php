@@ -14,7 +14,7 @@ class OrderPlaced
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private $order;
+    public $order;
     /**
      * Create a new event instance.
      */

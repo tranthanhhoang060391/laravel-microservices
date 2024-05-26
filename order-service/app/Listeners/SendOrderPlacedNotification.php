@@ -38,7 +38,8 @@ class SendOrderPlacedNotification
             'type' => 'order_placed',
             'order' => $event->order
         ]));
-        $this->channel->basic_publish($message, 'order_placed', 'order.placed');
+
+        $this->channel->basic_publish($message, 'order_placed', 'product.update.stock');
     }
 
     /**
