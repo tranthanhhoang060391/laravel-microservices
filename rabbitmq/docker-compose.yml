@@ -1,0 +1,11 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: 'rabbitmq'
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin_rabbit
+      - RABBITMQ_DEFAULT_PASS=admin_rabbit
