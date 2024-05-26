@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class OrderController extends Controller
         $fields = $request->validate([
             'user_id' => 'required|integer',
             'total' => 'required|numeric',
-            'status' => 'required|string|in:pending,processing,completed,cancelled',
+            'status' => 'required|string|in:pending,placed,processing,completed,cancelled',
             'details' => 'required|array',
             'details.*.product_id' => 'required|integer',
             'details.*.quantity' => 'required|integer',
@@ -70,7 +71,7 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'status' => 'string|in:pending,processing,completed,cancelled',
+            'status' => 'string|in:pending,placed,processing,completed,cancelled',
             'details' => 'sometimes|array',
             'details.*.id' => 'required|integer',
             'details.*.product_id' => 'required|integer',
@@ -104,6 +105,20 @@ class OrderController extends Controller
                 $orderDetail->quantity = $detail['quantity'];
                 $orderDetail->save();
             }
+        }
+
+        if (!$order->save()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to update order'
+            ], 500);
+        }
+
+        // If order status is 'placed', dispatch an event to notify other services
+        if ($fields['status'] === 'placed') {
+            // Get order details
+            $order = Order::with('details')->find($id);
+            event(new OrderPlaced($order));
         }
 
         return response()->json([

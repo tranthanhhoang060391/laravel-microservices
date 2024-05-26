@@ -9,3 +9,5 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=admin_rabbit
       - RABBITMQ_DEFAULT_PASS=admin_rabbit
+    volumes:
+      - ./rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
