@@ -36,7 +36,8 @@ class SendOrderPlacedNotification
     {
         $message = new AMQPMessage(json_encode([
             'type' => 'order_placed',
-            'order' => $event->order
+            'order' => $event->order,
+            'action' => 'decrease_product_stock'
         ]));
 
         $this->channel->basic_publish($message, 'order_placed', 'product.update.stock');
