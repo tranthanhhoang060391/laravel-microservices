@@ -100,7 +100,8 @@ return [
                 //     'auto_delete' => false,
                 // ],
                 'queue' => [
-                    'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
+                    // 'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
+                    'job' => App\Jobs\CustomRabbitMQ::class,
                     // 'declare' => true,
                     // 'bind' => true,
                     // 'binding_keys' => env('RABBITMQ_BINDING_KEYS', 'default.#'),

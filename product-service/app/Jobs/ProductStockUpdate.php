@@ -27,18 +27,21 @@ class ProductStockUpdate implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle()
     {
-        $order = $this->payload['order'];
-        $orderItems = $order->details;
+        var_dump($this->payload);exit;
+        $payload = $this->payload;
+        $order = $payload['order'];
+        $action = $payload['action'];
+        $orderItems = $order['details'];
 
         foreach ($orderItems as $orderItem) {
             $product = Product::find($orderItem['product_id']);
 
             if ($product) {
-                if ($orderItem['action'] === 'increase') {
+                if ($action === 'increase_product_stock') {
                     $product->stock += $orderItem['quantity'];
-                } elseif ($orderItem['action'] === 'decrease') {
+                } elseif ($action === 'decrease_product_stock') {
                     $product->stock -= $orderItem['quantity'];
                 }
 
@@ -47,5 +50,6 @@ class ProductStockUpdate implements ShouldQueue
                 Log::warning("Product with ID {$orderItem['product_id']} not found");
             }
         }
+
     }
 }

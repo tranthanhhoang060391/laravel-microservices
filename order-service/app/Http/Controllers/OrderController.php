@@ -124,11 +124,11 @@ class OrderController extends Controller
             // event(new OrderPlaced($order));
 
             // If we want to use queue to notify other services
-            ProductStockUpdate::dispatch(json_encode([
+            ProductStockUpdate::dispatch([
                 'type' => 'product.update.stock',
                 'order' => $order,
                 'action' => 'decrease_product_stock'
-            ]));
+            ]);
         }
 
         return response()->json([
