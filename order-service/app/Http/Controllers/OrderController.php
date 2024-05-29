@@ -121,14 +121,14 @@ class OrderController extends Controller
             // Get order details
             $order = Order::with('details')->find($id);
             // If we want to use event to notify other services
-            // event(new OrderPlaced($order));
+            event(new OrderPlaced($order));
 
             // If we want to use queue to notify other services
-            ProductStockUpdate::dispatch([
-                'type' => 'product.update.stock',
-                'order' => $order,
-                'action' => 'decrease_product_stock'
-            ]);
+            // ProductStockUpdate::dispatch([
+            //     'type' => 'product.update.stock',
+            //     'action' => 'decrease_product_stock',
+            //     'products' => $order->toArray()['details']
+            // ]);
         }
 
         return response()->json([
