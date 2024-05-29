@@ -6,6 +6,8 @@ use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
+use App\Jobs\ProductStockUpdate;
 
 class OrderController extends Controller
 {
@@ -118,7 +120,15 @@ class OrderController extends Controller
         if ($fields['status'] === 'placed') {
             // Get order details
             $order = Order::with('details')->find($id);
-            event(new OrderPlaced($order));
+            // If we want to use event to notify other services
+            // event(new OrderPlaced($order));
+
+            // If we want to use queue to notify other services
+            ProductStockUpdate::dispatch(json_encode([
+                'type' => 'product.update.stock',
+                'order' => $order,
+                'action' => 'decrease_product_stock'
+            ]));
         }
 
         return response()->json([

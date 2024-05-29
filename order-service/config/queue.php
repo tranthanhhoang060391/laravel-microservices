@@ -74,8 +74,7 @@ return [
 
         'rabbitmq' => [
             'driver' => 'rabbitmq',
-            'queue' => env('RABBITMQ_QUEUE', 'default'),
-            // 'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
+            // 'queue' => env('RABBITMQ_QUEUE', 'default'),
             'hosts' => [
                 [
                     'host' => env('RABBITMQ_HOST', '127.0.0.1'),
@@ -93,19 +92,21 @@ return [
                     'verify_peer' => env('RABBITMQ_SSL_VERIFY_PEER', true),
                     'passphrase' => env('RABBITMQ_SSL_PASSPHRASE', null),
                 ],
-                'exchange' => [
-                    'name' => env('RABBITMQ_EXCHANGE_NAME', 'topic_exchange'),
-                    'type' => 'topic',
-                    'declare' => true,
-                    'durable' => true,
-                    'auto_delete' => false,
-                ],
+                // 'exchange' => [
+                //     'name' => env('RABBITMQ_EXCHANGE_NAME', 'topic_exchange'),
+                //     'type' => 'topic',
+                //     'declare' => true,
+                //     'durable' => true,
+                //     'auto_delete' => false,
+                // ],
                 'queue' => [
-                    // 'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
-                    'job' => App\Jobs\CustomRabbitMQ::class,
-                    'declare' => true,
-                    'bind' => true,
-                    'binding_keys' => env('RABBITMQ_BINDING_KEYS', 'default.#'),
+                    'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
+                    // 'declare' => true,
+                    // 'bind' => true,
+                    // 'binding_keys' => env('RABBITMQ_BINDING_KEYS', 'default.#'),
+                    // 'exchange' => 'order_placed',
+                    // 'exchange_type' => 'topic',
+                    // 'exchange_routing_key' => 'product.update.stock'
                 ],
             ],
             /*

@@ -12,14 +12,14 @@ class StartProductStockListener extends Command
      *
      * @var string
      */
-    protected $signature = 'rabbitmq:listen';
+    protected $signature = 'rabbitmq:update-product-stock:listen';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Listen to RabbitMQ messages';
+    protected $description = 'Listen to RabbitMQ messages to update product stock';
 
     /**
      * Execute the console command.

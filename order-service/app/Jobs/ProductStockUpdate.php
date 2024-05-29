@@ -12,14 +12,14 @@ class ProductStockUpdate implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $product;
+    private $data;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($product)
+    public function __construct($data)
     {
-        $this->product = $product;
+        $this->data = $data;
     }
 
     /**

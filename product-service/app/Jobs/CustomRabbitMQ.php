@@ -9,8 +9,8 @@ class CustomRabbitMQ extends RabbitMQJob
 {
     public function fire()
     {
-        $message = $this->getRawBody();
-        $payload = json_decode($message, true);
+        $payload = $this->payload();
+        var_dump($payload);exit;
         $jobClass = $this->determineJobClass($payload['type']);
 
         if ($jobClass) {
