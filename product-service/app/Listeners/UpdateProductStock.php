@@ -9,31 +9,21 @@ use Illuminate\Queue\InteractsWithQueue;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Illuminate\Support\Facades\Log;
+use App\Services\RabbitMQService;
 
 class UpdateProductStock
 {
-    protected $connection;
-    protected $channel;
+    protected $rabbitMQService;
 
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-        $this->connection = new AMQPStreamConnection(
-            env('RABBITMQ_HOST', 'localhost'),
-            env('RABBITMQ_PORT', 5672),
-            env('RABBITMQ_USER', 'guest'),
-            env('RABBITMQ_PASSWORD', 'guest')
-        );
+        $this->rabbitMQService = new RabbitMQService();
+        $this->rabbitMQService->exchangeDeclare('inter_service_communication', 'topic');
 
-        $this->channel = $this->connection->channel();
-        $this->channel->exchange_declare('order_placed', 'topic', false, true, false);
-
-        list($queue_name,,) = $this->channel->queue_declare("", false, true, true, false);
-        $this->channel->queue_bind($queue_name, 'order_placed', 'product.update.stock');
-
-        $this->channel->basic_consume($queue_name, '', false, true, false, false, [$this, 'processMessage']);
+        $this->rabbitMQService->consume('', 'product.update.stock', [$this, 'processMessage']);
     }
 
     public function processMessage(AMQPMessage $msg)
@@ -63,14 +53,11 @@ class UpdateProductStock
 
     public function listen()
     {
-        while ($this->channel->is_consuming()) {
-            $this->channel->wait();
-        }
+        //
     }
 
     public function __destruct()
     {
-        $this->channel->close();
-        $this->connection->close();
+        //
     }
 }
