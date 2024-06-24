@@ -19,19 +19,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/profile', [UserController::class, 'profile']);
 
     // Product service routes
-    Route::get('/products', [ProductController::class, 'getProducts']);
-    Route::post('/product/create', [ProductController::class, 'createProduct']);
-    Route::get('/product/{id}', [ProductController::class, 'getProduct']);
-    Route::put('/product/update/{id}', [ProductController::class, 'updateProduct']);
-    Route::delete('/product/delete/{id}', [ProductController::class, 'deleteProduct']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::post('/product/create', [ProductController::class, 'create']);
+    Route::get('/product/{id}', [ProductController::class, 'show']);
+    Route::put('/product/update/{id}', [ProductController::class, 'update']);
+    Route::delete('/product/delete/{id}', [ProductController::class, 'delete']);
 
     // Order service routes
-    Route::get('/orders', [OrderController::class, 'getOrders']);
-    Route::post('/order/create', [OrderController::class, 'createOrder']);
-    Route::get('/order/{id}', [OrderController::class, 'getOrder']);
-    Route::put('/order/update/{id}', [OrderController::class, 'updateOrder']);
-    Route::delete('/order/delete/{id}', [OrderController::class, 'deleteOrder']);
-    Route::get('/order/user/{user_id}', [OrderController::class, 'getUserOrders']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::post('/order/create', [OrderController::class, 'create']);
+    Route::get('/order/{id}', [OrderController::class, 'show']);
+    Route::put('/order/update/{id}', [OrderController::class, 'update']);
+    Route::delete('/order/delete/{id}', [OrderController::class, 'delete']);
+    Route::get('/order/user/{user_id}', [OrderController::class, 'userOrders']);
 });
 
 
