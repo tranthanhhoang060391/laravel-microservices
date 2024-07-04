@@ -140,9 +140,8 @@ class OrderServiceController extends Controller
         $tokens = Cache::get('inter_service_token_order');
 
         if (empty($tokens)) {
-            $tokens = InterServiceTokens::where('issuer_service_id', env('ORDER_SERVICE_ID'))->get();
-
-            if ($tokens->isEmpty() || $tokens->api_token_expires_at < now()) {
+            $tokens = InterServiceTokens::where('issuer_service_id', env('ORDER_SERVICE_ID'))->get()->first();
+            if (empty($tokens) || $tokens->api_token_expires_at->isPast()) {
                 $request = Http::post(env('ORDER_SERVICE_URL')  . '/service-accounts/token', [
                     'service_id' => env('API_GATEWAY_SERVICE_ID'),
                     'service_secret' => env('API_GATEWAY_SERVICE_SECRET'),
