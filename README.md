@@ -14,6 +14,10 @@
 
 This project is a [microservices/monolithic]-based web application built using Laravel. It is designed to [briefly describe the purpose of the application, e.g., manage products and orders in an e-commerce platform]. The application leverages various Laravel packages and tools such as Laravel Sanctum, Laravel Octane, and RabbitMQ for secure communication, performance optimization, and asynchronous processing.
 
+The folder structure consists of 2 folders
+- microservice: This folder contains all services related to microservice architecture
+- mono-application: This folder content files and folders for monolithic architecture
+
 ## Features
 
 - User authentication with Laravel Sanctum
