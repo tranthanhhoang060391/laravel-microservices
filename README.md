@@ -53,13 +53,15 @@ This application follows a microservices architecture, with separate services fo
 To start the microservice application:
 
 1. Navigate to each folder within the **microservices** directory.
-2. Run `./vendor/bin/sail up -d` to start the containers.
-3. Start RabbitMQ by running `docker-compose up`.
-4. Test the application using Postman, and connect to the database using your preferred tool (ensure the correct database port is used).
+2. Copy the .env.example and rename to .env
+3. Run `./vendor/bin/sail up -d` to start the containers.
+4. Start RabbitMQ by running `docker-compose up`.
+5. Test the application using Postman, and connect to the database using your preferred tool (ensure the correct database port is used).
 
 To start the monolithic application:
-1. Navigate to each folder within the **mono-appplication** directory.
-2. Run `./vendor/bin/sail up -d` to start the containers.
+1. Navigate to the **mono-appplication** directory.
+2. Copy the .env.example and rename to .env
+3. Run `./vendor/bin/sail up -d` to start the containers.
 
 ### Prerequisites
 
